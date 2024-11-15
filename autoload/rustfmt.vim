@@ -61,6 +61,16 @@ function! s:RustfmtWriteMode()
 endfunction
 
 function! s:RustfmtConfigOptions()
+    let l:rustfmt_toml = findfile('rustfmt.toml', expand('%:p:h') . ';')
+    if l:rustfmt_toml !=# ''
+        return '--config-path '.shellescape(fnamemodify(l:rustfmt_toml, ":p"))
+    endif
+
+    let l:_rustfmt_toml = findfile('.rustfmt.toml', expand('%:p:h') . ';')
+    if l:_rustfmt_toml !=# ''
+        return '--config-path '.shellescape(fnamemodify(l:_rustfmt_toml, ":p"))
+    endif
+
     let l:rustfmt_toml = findfile(expand('$HOME/rustfmt.toml'), expand('%:p:h') . ';')
     if l:rustfmt_toml !=# ''
         return '--config-path '.shellescape(fnamemodify(l:rustfmt_toml, ":p"))
@@ -79,16 +89,6 @@ function! s:RustfmtConfigOptions()
     let l:rustfmt_toml = findfile(expand('$HOME/.config/rustfmt/.rustfmt.toml'), expand('%:p:h') . ';')
     if l:rustfmt_toml !=# ''
         return '--config-path '.shellescape(fnamemodify(l:rustfmt_toml, ":p"))
-    endif
-
-    let l:rustfmt_toml = findfile('rustfmt.toml', expand('%:p:h') . ';')
-    if l:rustfmt_toml !=# ''
-        return '--config-path '.shellescape(fnamemodify(l:rustfmt_toml, ":p"))
-    endif
-
-    let l:_rustfmt_toml = findfile('.rustfmt.toml', expand('%:p:h') . ';')
-    if l:_rustfmt_toml !=# ''
-        return '--config-path '.shellescape(fnamemodify(l:_rustfmt_toml, ":p"))
     endif
 
     " Default to edition 2018 in case no rustfmt.toml was found.
